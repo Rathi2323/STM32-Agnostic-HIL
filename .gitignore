@@ -1,0 +1,16 @@
+# Compiled binaries
+sim_test.exe
+sim_test
+
+# STM32CubeIDE
+.metadata/
+STM_Agnostic_HIL/Debug/
+*.o
+*.d
+*.su
+*.elf
+*.map
+*.list
+
+# VS Code
+.vscode/
