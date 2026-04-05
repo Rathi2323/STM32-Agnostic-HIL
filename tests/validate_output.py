@@ -1,7 +1,10 @@
 import subprocess
 import sys
+import platform
 
-result = subprocess.run(["./sim_test.exe"], capture_output=True, text=True)
+binary = "./sim_test.exe" if platform.system() =="Windows" else "./sim_test"
+
+result = subprocess.run([binary], capture_output=True, text=True)
 output = result.stdout
 
 print("____Firmware Output____")
