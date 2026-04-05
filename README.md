@@ -1,3 +1,5 @@
+[![Firmware CI](https://github.com/Rathi2323/STM32-Agnostic-HIL/actions/workflows/ci.yml/badge.svg)](https://github.com/Rathi2323/STM32-Agnostic-HIL/actions/workflows/ci.yml)
+
 # STM32 Hardware-Agnostic Firmware with Simulated Verification
 
 Firmware architecture decoupled from hardware using a Hardware 
