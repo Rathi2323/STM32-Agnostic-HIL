@@ -8,50 +8,60 @@ void run_system_tick(void);
 int tests_passed = 0;
 int tests_failed = 0;
 
+int temptoraw(float temp)
+{
+	float voltage = (temp-25)*0.0025 + 0.76;
+	float raw = voltage * 4096 / 3.3;
+	return (int)raw;
+}
+
 void test_sensor_above_threshold(void)
 {
-	HAL_SetMockSensor(4000);
+	int raw = temptoraw(50.0f);
+	HAL_SetMockSensor(raw);
 	run_system_tick();
-	if(strcmp(last_uart_message, "Warning! Sensor value exceeded threshold!!")==0)
+	if(HAL_GetMockPinState(13)==IO_HIGH)
 	{
-		printf("\n[PASS] sensor above threshold");
+		printf("\n[PASS] LED ON above threshold");
 		tests_passed++;
 	}
 	else
 	{
-		printf("\n[FAIL] sensor above threshold");	
+		printf("\n[FAIL] LED ON above threshold");	
 		tests_failed++;
 	}
 }
 
 void test_sensor_below_threshold(void)
 {
-	HAL_SetMockSensor(100);
+	int raw = temptoraw(10.0f);
+	HAL_SetMockSensor(raw);
 	run_system_tick();
-	if(strcmp(last_uart_message, "Warning! Sensor value exceeded threshold!!")!=0)
+	if(HAL_GetMockPinState(13)==IO_LOW)
 	{
-		printf("\n[PASS] sensor below threshold");
+		printf("\n[PASS] LED OFF below threshold");
 		tests_passed++;
 	}
 	else
 	{
-		printf("\n[FAIL] sensor below threshold");	
+		printf("\n[FAIL] LED OFF below threshold");	
 		tests_failed++;
 	}
 }
 
 void test_boundary_value(void)
 {
-	HAL_SetMockSensor(3000);
+	int raw = temptoraw(40.0f);
+	HAL_SetMockSensor(raw);
 	run_system_tick();
-	if(strcmp(last_uart_message, "Warning! Sensor value exceeded threshold!!")!=0)
+	if(HAL_GetMockPinState(13)==IO_LOW)
 	{
-		printf("\n[PASS] sensor at boundary value");
+		printf("\n[PASS] LED OFF at boundary value");
 		tests_passed++;
 	}
 	else
 	{
-		printf("\n[FAIL] sensor at boundary value");	
+		printf("\n[FAIL] LED OFF at boundary value");	
 		tests_failed++;
 	}
 }

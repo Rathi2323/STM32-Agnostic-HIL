@@ -12,9 +12,9 @@ print("____Firmware Output____")
 
 checks = [
     ("3 passed, 0 failed", "all C tests passed"),
-    ("[PASS] sensor above threshold", "above threshold test"),
-    ("[PASS] sensor below threshold", "below threshold test"),
-    ("[PASS] sensor at boundary", "boundary value test"),
+    ("[PASS] LED ON above threshold", "above threshold test"),
+    ("[PASS] LED OFF below threshold", "below threshold test"),
+    ("[PASS] LED OFF at boundary", "boundary value test"),
 ]
 
 all_ok = True
