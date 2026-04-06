@@ -2,17 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-void run_system_tick(void) {
-    // Read the User Button (Pin 0)
-    if (HAL_GPIO_ReadPin(0) == IO_HIGH) {
-        // Turn on the LED (Pin 12)
-        HAL_GPIO_WritePin(12, IO_HIGH);
-        HAL_UART_Print("Status: Button Pressed - LED ON\r\n");
-        }
-   else
-   {
-        HAL_GPIO_WritePin(12, IO_LOW);
-   }
+void run_system_tick(void)
+{
     // --- ADC Temperature Sensor ---
     uint16_t raw = HAL_ReadSensor();
 
@@ -27,7 +18,6 @@ void run_system_tick(void) {
 
     //formatting manually
     buf[0] = '\0';
-   // char num[20];
     sprintf(buf, "Chip Temp: %d.%d C\r\n",temp_int, temp_frac);
 
     HAL_UART_Print(buf);

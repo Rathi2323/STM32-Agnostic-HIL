@@ -8,6 +8,10 @@ void uart2_init(void);
 void uart2_send_char(char c);
 void uart2_send_string(const char* str);
 void ADC_Init(void);
+void TIM2_Init(void);
+void EXTI0_Init(void);
+void TIM2_IRQHandler(void);
+void EXTI0_IRQHandler(void);
 
 // --- Debug Buffer Logic ---
 //global array that lives in RAM.
@@ -32,9 +36,9 @@ void HAL_Init(void)
     GPIOD->MODER |=  (1 << 26);
 
     uart2_init();   // ← UART first so we can debug
-
-    ADC_Init();     // ← ADC after
-
+    ADC_Init(); // ← ADC after
+    TIM2_Init();
+    EXTI0_Init();
 }
 
 // ─── UART ────────────────────────────────────────
@@ -84,6 +88,62 @@ void ADC_Init(void)
 	ADC1->CR2 |= ADC_CR2_ADON;
 	//Wait for ADC to stabilize(delay)
 	for(volatile int i=0; i<100000;i++);
+}
+// ─── Interrupt Implementation_TIM2──────────────────────────
+
+void TIM2_Init(void)
+{
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+	TIM2->PSC = 15999;
+	TIM2->ARR = 999;
+	TIM2->DIER |= TIM_DIER_UIE;
+	TIM2->CR1  |= TIM_CR1_CEN;
+	NVIC_SetPriority(TIM2_IRQn,2);
+	NVIC_EnableIRQ(TIM2_IRQn);
+}
+
+// ─── Interrupt Implementation_EXTI0──────────────────────────
+
+void EXTI0_Init(void)
+{
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+	SYSCFG->EXTICR[0] &= ~(SYSCFG_EXTICR1_EXTI0);
+	SYSCFG->EXTICR[0] |= (SYSCFG_EXTICR1_EXTI0_PA);
+	EXTI->RTSR |= EXTI_RTSR_TR0;
+	EXTI->FTSR |= EXTI_FTSR_TR0;
+	EXTI->IMR  |= EXTI_IMR_MR0;
+	NVIC_SetPriority(EXTI0_IRQn,1);
+	NVIC_EnableIRQ(EXTI0_IRQn);
+}
+
+//timer ISR - fires every 1 second
+void TIM2_IRQHandler(void)
+{
+	if(TIM2->SR & TIM_SR_UIF)
+	{
+		TIM2->SR &= ~TIM_SR_UIF;
+		run_system_tick();
+	}
+}
+
+//button ISR - fires on PA0 rising edge
+void EXTI0_IRQHandler(void)
+{
+	if(EXTI->PR & EXTI_PR_PR0)
+	{
+		EXTI->PR |= EXTI_PR_PR0;
+
+		if(GPIOA->IDR & (1<<0))
+		{
+		HAL_GPIO_WritePin(12,IO_HIGH);
+		HAL_UART_Print("Status: Button Pressed - LED ON\r\n");
+		}
+		else
+		{
+		HAL_GPIO_WritePin(12,IO_LOW);
+		HAL_UART_Print("Status: Button Release - LED OFF\r\n");
+		}
+	}
 }
 
 // ─── HAL Implementation ──────────────────────────
