@@ -8,6 +8,8 @@ typedef enum {
 	IO_HIGH = 1
 }IO_State;
 
+void run_system_tick(void);
+void HAL_Init(void);
 void HAL_GPIO_WritePin(uint8_t pin, IO_State state);
 IO_State HAL_GPIO_ReadPin(uint8_t pin);
 void HAL_UART_Print(const char* str);
