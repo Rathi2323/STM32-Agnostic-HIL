@@ -11,10 +11,12 @@ print("____Firmware Output____")
 #print(output)
 
 checks = [
-    ("3 passed, 0 failed", "all C tests passed"),
+    ("5 passed, 0 failed", "all C tests passed"),
     ("[PASS] LED ON above threshold", "above threshold test"),
     ("[PASS] LED OFF below threshold", "below threshold test"),
     ("[PASS] LED OFF at boundary", "boundary value test"),
+    ("[PASS] Higher Priority IRQ preempts lower priority IRQ", "nested preemption test"),
+    ("[PASS] Lower priority IRQ stays pending until ISR exits", "pending lower priority test"),
 ]
 
 all_ok = True
