@@ -26,6 +26,14 @@ static SimIRQ sim_irqs[SIM_IRQ_COUNT];
 static int current_irq_stack[SIM_IRQ_COUNT];
 static uint8_t current_irq_depth = 0;
 
+static void HAL_SIM_RenderVirtualLed(uint8_t pin, IO_State state)
+{
+    printf("[VIRTUAL LED P%d] [%s] %s\n",
+           pin,
+           state == IO_HIGH ? "####" : "    ",
+           state == IO_HIGH ? "ON" : "OFF");
+}
+
 static int HAL_SIM_GetCurrentPriority(void)
 {
     if (current_irq_depth == 0) {
@@ -70,6 +78,7 @@ void HAL_GPIO_WritePin(uint8_t pin, IO_State state)
 {
     printf("\n[SIM] GPIO Pin %d is now %s\n", pin, (state == IO_HIGH ? "HIGH" : "LOW"));
 	mock_pin_states[pin] = state;
+    HAL_SIM_RenderVirtualLed(pin, state);
 }
 
 IO_State HAL_GPIO_ReadPin(uint8_t pin) {

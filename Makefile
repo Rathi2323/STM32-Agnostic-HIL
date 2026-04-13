@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -I./common
+SIM_CFLAGS = $(CFLAGS) -DTARGET_SIM
 
 SIM_SRCS = app/main_logic.c hw_sim/hw_sim.c tests/test_runner.c
 
@@ -10,7 +11,7 @@ else
 endif
 
 sim: 
-	@$(CC) $(CFLAGS) $(SIM_SRCS) -o sim_test
+	@$(CC) $(SIM_CFLAGS) $(SIM_SRCS) -o sim_test
 	
 run: sim 
 	@./sim_test
