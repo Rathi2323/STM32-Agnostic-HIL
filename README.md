@@ -58,11 +58,11 @@ tests/        → Automated test suite
 
 ## Running on host (no board needed)
 Requirements: gcc, make, python
-
+```
 make sim      # build simulator
 make run      # build, run tests and validate output
 make clean    # remove binary
-
+```
 ## Running on STM32F407
 Open STM_Agnostic_HIL/ in STM32CubeIDE and flash normally.
 Tested on STM32F407G-DISC1 Discovery board.
