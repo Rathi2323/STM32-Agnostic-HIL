@@ -4,7 +4,7 @@
 int main(void) {
 	HAL_Init();
     while (1) {
-        //run_system_tick();// This calls your agnostic logic!
+        //run_system_tick();// Calling agnostic logic
         __WFI();
     }
 }
